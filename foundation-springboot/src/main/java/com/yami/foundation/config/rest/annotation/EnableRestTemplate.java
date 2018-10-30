@@ -1,4 +1,4 @@
-package com.yami.foundation.web.rest.annotation;
+package com.yami.foundation.config.rest.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 
 import org.springframework.context.annotation.Import;
 
-import com.yami.foundation.web.rest.RestTemplateConfig;
+import com.yami.foundation.config.rest.RestTemplateConfig;
 
 /**
  * @author kakashi
