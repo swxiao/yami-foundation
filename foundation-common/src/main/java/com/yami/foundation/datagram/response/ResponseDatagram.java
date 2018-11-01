@@ -84,9 +84,9 @@ public class ResponseDatagram extends AbstractDatagram {
 			this.setCode(rsd.getCode());
 			this.setMsg(rsd.getMsg());
 			this.setVersion(rsd.getVersion());
-			this.setExtras(rsd.getExtras());
+			this.setAttach(rsd.getAttach());
 			byte[] aesKeyByte = AesRsaUtil.decryptKey(privateKey, rsd.getSignature(), "UTF-8");
-			this.setData(BeanUtil.json2Bean(AesRsaUtil.decryptData((String) rsd.getData(), aesKeyByte, "UTF-8"), Map.class));
+			this.setBody(BeanUtil.json2Bean(AesRsaUtil.decryptData((String) rsd.getBody(), aesKeyByte, "UTF-8"), Map.class));
 			this.setSignature(rsd.getSignature());
 			return this;
 		} catch (Exception e) {
@@ -97,7 +97,7 @@ public class ResponseDatagram extends AbstractDatagram {
 	public ResponseDatagram decryptRSA(String privateKey) throws DatagramException {
 		try {
 			byte[] aesKeyByte = AesRsaUtil.decryptKey(privateKey, this.getSignature(), "UTF-8");
-			this.setData(BeanUtil.json2Bean(AesRsaUtil.decryptData((String) this.getData(), aesKeyByte, "UTF-8"), Map.class));
+			this.setBody(BeanUtil.json2Bean(AesRsaUtil.decryptData((String) this.getBody(), aesKeyByte, "UTF-8"), Map.class));
 			return this;
 		} catch (Exception e) {
 			throw new DatagramException(e.getMessage(), e);
@@ -112,13 +112,13 @@ public class ResponseDatagram extends AbstractDatagram {
 			this.setCode(rsd.getCode());
 			this.setMsg(rsd.getMsg());
 			this.setVersion(rsd.getVersion());
-			this.setExtras(rsd.getExtras());
-			String signature = DigestUtils.md5Hex(rsd.getData() + key);
+			this.setAttach(rsd.getAttach());
+			String signature = DigestUtils.md5Hex(rsd.getBody() + key);
 			if (!rsd.getSignature().equalsIgnoreCase(signature)) {// MD5验证忽略大小写
 				throw new IllegalArgumentException("signature error!");
 			}
-			String dataStr = Des3Util.decode((String) rsd.getData(), key);
-			this.setData(BeanUtil.json2Bean(dataStr, Object.class));
+			String dataStr = Des3Util.decode((String) rsd.getBody(), key);
+			this.setBody(BeanUtil.json2Bean(dataStr, Object.class));
 			this.setSignature(rsd.getSignature());
 			return this;
 		} catch (Exception e) {
@@ -128,12 +128,12 @@ public class ResponseDatagram extends AbstractDatagram {
 
 	public ResponseDatagram decryptDES(String key) throws DatagramException {
 		try {
-			String signature = DigestUtils.md5Hex(this.getData() + key);
+			String signature = DigestUtils.md5Hex(this.getBody() + key);
 			if (!this.getSignature().equalsIgnoreCase(signature)) {// MD5验证忽略大小写
 				throw new IllegalArgumentException("signature error!");
 			}
-			String dataStr = Des3Util.decode((String) this.getData(), key);
-			this.setData(BeanUtil.json2Bean(dataStr, Object.class));
+			String dataStr = Des3Util.decode((String) this.getBody(), key);
+			this.setBody(BeanUtil.json2Bean(dataStr, Object.class));
 			this.setSignature(signature);
 			return this;
 		} catch (Exception e) {

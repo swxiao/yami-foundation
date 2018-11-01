@@ -33,11 +33,11 @@ public abstract class AbstractDatagram {
 
 	private String timestamp;
 
-	private Object data;
+	private Object body;
 
 	private String signature;
 
-	private Object extras;
+	private Object attach;
 
 	/**
 	 * @return the serialNo
@@ -85,24 +85,24 @@ public abstract class AbstractDatagram {
 	}
 
 	/**
-	 * @return the data
+	 * @return the bory
 	 */
-	public Object getData() {
-		return data;
+	public Object getBody() {
+		return body;
 	}
 
 	/**
-	 * @param data
+	 * @param body
 	 *            the data to set
 	 */
-	public void setData(Object data) {
-		if (data instanceof Map) {
-			if (((Map) data).containsKey(ResponseInfo.KEY_CODE))
-				((Map) data).remove(ResponseInfo.KEY_CODE);
-			if (((Map) data).containsKey(ResponseInfo.KEY_MSG))
-				((Map) data).remove(ResponseInfo.KEY_MSG);
+	public void setBody(Object body) {
+		if (body instanceof Map) {
+			if (((Map) body).containsKey(ResponseInfo.KEY_CODE))
+				((Map) body).remove(ResponseInfo.KEY_CODE);
+			if (((Map) body).containsKey(ResponseInfo.KEY_MSG))
+				((Map) body).remove(ResponseInfo.KEY_MSG);
 		}
-		this.data = data;
+		this.body = body;
 	}
 
 	/**
@@ -120,19 +120,19 @@ public abstract class AbstractDatagram {
 		this.signature = signature;
 	}
 
-	public Object getExtras() {
-		return extras;
+	public Object getAttach() {
+		return attach;
 	}
 
-	public void setExtras(Object extras) {
-		this.extras = extras;
+	public void setAttach(Object attach) {
+		this.attach = attach;
 	}
 
 	public String encryptDESString(String key) {
 		try {
-			String data = BeanUtil.bean2JSON(this.getData());
+			String data = BeanUtil.bean2JSON(this.getBody());
 			String encodeData = Des3Util.encode(data, key);
-			this.setData(encodeData);
+			this.setBody(encodeData);
 			String signature = DigestUtils.md5Hex(encodeData + key);
 			this.setSignature(signature);
 		} catch (Exception e) {
@@ -144,9 +144,9 @@ public abstract class AbstractDatagram {
 
 	public String encryptRSAString(String publicKey) {
 		try {
-			String data = BeanUtil.bean2JSON(this.getData());
+			String data = BeanUtil.bean2JSON(this.getBody());
 			String aesKey = AesRsaUtil.generateLenString(16);
-			this.setData(AesRsaUtil.encryptData(data, aesKey, "UTF-8"));
+			this.setBody(AesRsaUtil.encryptData(data, aesKey, "UTF-8"));
 			this.setSignature(AesRsaUtil.encrtptKey(publicKey, aesKey, "UTF-8"));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -157,12 +157,12 @@ public abstract class AbstractDatagram {
 
 	public String decryptDESString(String key) {
 		try {
-			String data = (String) this.getData();
+			String data = (String) this.getBody();
 			String signature = DigestUtils.md5Hex(data + key);
 			if (!this.getSignature().equalsIgnoreCase(signature)) {// MD5验证忽略大小写
 				throw new IllegalArgumentException("signature error!");
 			}
-			this.setData(BeanUtil.json2Bean(Des3Util.decode(data, key), Map.class));
+			this.setBody(BeanUtil.json2Bean(Des3Util.decode(data, key), Map.class));
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new DatagramException(e.getMessage(), e.getCause());
@@ -173,9 +173,9 @@ public abstract class AbstractDatagram {
 	public String decryptRSAString(String privateKey) {
 		try {
 			String signatute = this.getSignature();
-			String data = (String) this.getData();
+			String data = (String) this.getBody();
 			byte[] aesKeyByte = AesRsaUtil.decryptKey(privateKey, signatute, "UTF-8");
-			this.setData(BeanUtil.json2Bean(AesRsaUtil.decryptData(data, aesKeyByte, "UTF-8"), Map.class));
+			this.setBody(BeanUtil.json2Bean(AesRsaUtil.decryptData(data, aesKeyByte, "UTF-8"), Map.class));
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new DatagramException(e.getMessage(), e.getCause());

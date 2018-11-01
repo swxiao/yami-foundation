@@ -23,6 +23,13 @@ public class DecimalUtil {
 		return decStr;
 	}
 
+	/**
+	 * 获取小数
+	 * 
+	 * @param value
+	 * @param scale
+	 * @return
+	 */
 	public static BigDecimal getBigDecimal(BigDecimal value, int scale) {
 		if (value == null) {
 			return BigDecimal.ZERO.setScale(scale);
@@ -31,4 +38,33 @@ public class DecimalUtil {
 		}
 	}
 
+	/**
+	 * 元转分
+	 * 
+	 * @param value
+	 * @param scale
+	 * @return
+	 */
+	public static int yuan2Fen(BigDecimal value, int scale) {
+		if (value == null) {
+			return BigDecimal.ZERO.setScale(scale).intValue();
+		} else {
+			return value.multiply(BigDecimal.valueOf(100)).setScale(scale, BigDecimal.ROUND_HALF_UP).intValue();
+		}
+	}
+
+	/**
+	 * 分转元
+	 * 
+	 * @param value
+	 * @param scale
+	 * @return
+	 */
+	public static int fen2Yuan(BigDecimal value, int scale) {
+		if (value == null) {
+			return BigDecimal.ZERO.setScale(scale).intValue();
+		} else {
+			return value.divide(BigDecimal.valueOf(100)).setScale(scale, BigDecimal.ROUND_HALF_UP).intValue();
+		}
+	}
 }
