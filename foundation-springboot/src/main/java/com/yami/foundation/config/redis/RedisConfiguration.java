@@ -65,6 +65,7 @@ public class RedisConfiguration {
 		JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(redisClusterConfiguration);
 		jedisConnectionFactory.setPoolConfig(jedisPoolConfig);
 		jedisConnectionFactory.setUsePool(true);
+		jedisConnectionFactory.setPassword(environment.getProperty("digest.redis.password"));
 		jedisConnectionFactory.afterPropertiesSet();
 		return jedisConnectionFactory;
 	}
