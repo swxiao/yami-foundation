@@ -1,19 +1,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.yami</groupId>
-  <artifactId>foundation</artifactId>
+  <groupId>com.asciily</groupId>
+  <artifactId>asciily-foundation</artifactId>
   <version>1.0.0</version>
   <packaging>pom</packaging>
   <parent>
-  	<groupId>com.yami</groupId>
-  	<artifactId>yami-parent</artifactId>
+  	<groupId>com.asciily</groupId>
+  	<artifactId>asciily-parent</artifactId>
   	<version>1.0.0</version>
   </parent>
   <modules>
-  	<module>foundation-common</module>
-  	<module>foundation-persistence</module>
-  	<module>foundation-springboot</module>
-  	<module>foundation-springboot-web</module>
-  	<module>foundation-web</module>
+  	<module>asciily-foundation-common</module>
+  	<module>asciily-foundation-persistence</module>
+  	<module>asciily-foundation-springboot</module>
+  	<module>asciily-foundation-springboot-web</module>
+  	<module>asciily-foundation-web</module>
   </modules>
 </project>
