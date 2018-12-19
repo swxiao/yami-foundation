@@ -47,7 +47,7 @@ public class RequestDatagram extends AbstractDatagram {
 
 	private RequestDatagram initDatagram() {
 		this.setVersion("1.0");
-		this.setSerialNo(PKUtil.getInstance().UUIDPK());
+		this.setNonceString(PKUtil.getInstance().generateNonceStr());
 		this.setTimestamp(DateUtil.DateToString(Calendar.getInstance().getTime(), "yyyyMMddHHmmssSSS"));
 		return this;
 	}
@@ -55,13 +55,12 @@ public class RequestDatagram extends AbstractDatagram {
 	public RequestDatagram decryptRSA(String encryptString, String privateKey) throws DatagramException {
 		try {
 			RequestDatagram rd = BeanUtil.json2Bean(encryptString, this.getClass());
-			this.setSerialNo(rd.getSerialNo());
+			this.setNonceString(rd.getNonceString());
 			this.setVersion(rd.getVersion());
 			this.setTimestamp(rd.getTimestamp());
 			byte[] aesKeyByte = AesRsaUtil.decryptKey(privateKey, rd.getSignature(), "UTF-8");
 			this.setBody(BeanUtil.json2Bean(AesRsaUtil.decryptData((String) rd.getBody(), aesKeyByte, "UTF-8"), Map.class));
 			this.setSignature(rd.getSignature());
-			this.setAttach(rd.getAttach());
 			return this;
 		} catch (Exception e) {
 			throw new DatagramException(e.getMessage(), e);
@@ -81,10 +80,9 @@ public class RequestDatagram extends AbstractDatagram {
 	public RequestDatagram decryptDES(String encryptString, String key) throws DatagramException {
 		try {
 			RequestDatagram rd = BeanUtil.json2Bean(encryptString, this.getClass());
-			this.setSerialNo(rd.getSerialNo());
+			this.setNonceString(rd.getNonceString());
 			this.setVersion(rd.getVersion());
 			this.setTimestamp(rd.getTimestamp());
-			this.setAttach(rd.getAttach());
 			String signature = DigestUtils.md5Hex(rd.getBody() + key);
 			if (!rd.getSignature().equalsIgnoreCase(signature)) {// MD5验证忽略大小写
 				throw new IllegalArgumentException("signature error!");

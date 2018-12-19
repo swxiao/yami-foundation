@@ -1,9 +1,11 @@
 package com.asciily.foundation.common.util;
 
 import java.io.Serializable;
+import java.security.SecureRandom;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -240,4 +242,22 @@ public class PKUtil {
 	public String UUIDPK() {
 		return UUID.randomUUID().toString().replaceAll("-", "");
 	}
+
+	private static final String SYMBOLS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+	private static final Random RANDOM = new SecureRandom();
+
+	/**
+	 * 获取随机字符串 Nonce Str
+	 *
+	 * @return String 随机字符串
+	 */
+	public String generateNonceStr() {
+		char[] nonceChars = new char[32];
+		for (int index = 0; index < nonceChars.length; ++index) {
+			nonceChars[index] = SYMBOLS.charAt(RANDOM.nextInt(SYMBOLS.length()));
+		}
+		return new String(nonceChars);
+	}
+
 }

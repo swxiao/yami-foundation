@@ -27,7 +27,7 @@ import com.asciily.foundation.datagram.exception.DatagramException;
  */
 public abstract class AbstractDatagram {
 
-	private String serialNo;
+	private String nonceString;
 
 	private String version;
 
@@ -37,21 +37,12 @@ public abstract class AbstractDatagram {
 
 	private String signature;
 
-	private Object attach;
-
-	/**
-	 * @return the serialNo
-	 */
-	public String getSerialNo() {
-		return serialNo;
+	public String getNonceString() {
+		return nonceString;
 	}
 
-	/**
-	 * @param serialNo
-	 *            the serialNo to set
-	 */
-	public void setSerialNo(String serialNo) {
-		this.serialNo = serialNo;
+	public void setNonceString(String nonceString) {
+		this.nonceString = nonceString;
 	}
 
 	/**
@@ -118,14 +109,6 @@ public abstract class AbstractDatagram {
 	 */
 	public void setSignature(String signature) {
 		this.signature = signature;
-	}
-
-	public Object getAttach() {
-		return attach;
-	}
-
-	public void setAttach(Object attach) {
-		this.attach = attach;
 	}
 
 	public String encryptDESString(String key) {
