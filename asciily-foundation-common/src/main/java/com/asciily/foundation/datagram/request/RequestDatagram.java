@@ -31,14 +31,14 @@ import com.asciily.foundation.datagram.exception.DatagramException;
  */
 public class RequestDatagram extends AbstractDatagram {
 
-	private String deviceNo;
+	private String authNo;
 
-	public String getDeviceNo() {
-		return deviceNo;
+	public String getAuthNo() {
+		return authNo;
 	}
 
-	public void setDeviceNo(String deviceNo) {
-		this.deviceNo = deviceNo;
+	public void setAuthNo(String authNo) {
+		this.authNo = authNo;
 	}
 
 	public RequestDatagram() {
@@ -59,7 +59,8 @@ public class RequestDatagram extends AbstractDatagram {
 			this.setVersion(rd.getVersion());
 			this.setTimestamp(rd.getTimestamp());
 			byte[] aesKeyByte = AesRsaUtil.decryptKey(privateKey, rd.getSignature(), "UTF-8");
-			this.setBody(BeanUtil.json2Bean(AesRsaUtil.decryptData((String) rd.getBody(), aesKeyByte, "UTF-8"), Map.class));
+			this.setBody(
+					BeanUtil.json2Bean(AesRsaUtil.decryptData((String) rd.getBody(), aesKeyByte, "UTF-8"), Map.class));
 			this.setSignature(rd.getSignature());
 			return this;
 		} catch (Exception e) {
@@ -70,7 +71,8 @@ public class RequestDatagram extends AbstractDatagram {
 	public RequestDatagram decryptRSA(String privateKey) throws DatagramException {
 		try {
 			byte[] aesKeyByte = AesRsaUtil.decryptKey(privateKey, this.getSignature(), "UTF-8");
-			this.setBody(BeanUtil.json2Bean(AesRsaUtil.decryptData((String) this.getBody(), aesKeyByte, "UTF-8"), Map.class));
+			this.setBody(BeanUtil.json2Bean(AesRsaUtil.decryptData((String) this.getBody(), aesKeyByte, "UTF-8"),
+					Map.class));
 			return this;
 		} catch (Exception e) {
 			throw new DatagramException(e.getMessage(), e);

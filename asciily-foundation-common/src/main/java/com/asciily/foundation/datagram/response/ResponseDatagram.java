@@ -29,8 +29,8 @@ import com.asciily.foundation.datagram.exception.DatagramException;
  * @author Vincent xiao<xiaosw@msn.cn>
  * @since 2016年1月26日
  */
-public class ResponseDatagram extends AbstractDatagram {
 
+public class ResponseDatagram extends AbstractDatagram {
 	public ResponseDatagram() {
 		this.setTimestamp(DateUtil.DateToString(Calendar.getInstance().getTime(), "yyyyMMddHHmmssSSS"));
 		this.setVersion("1.0");
