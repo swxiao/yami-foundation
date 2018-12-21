@@ -111,20 +111,12 @@ public abstract class AbstractDatagram {
 		this.signature = signature;
 	}
 
-	public String encryptDESString(String key) {
-		try {
-			String data = BeanUtil.bean2JSON(this.getBody());
-			String encodeData = Des3Util.encode(data, key);
-			this.setBody(encodeData);
-			String signature = DigestUtils.md5Hex(encodeData + key);
-			this.setSignature(signature);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new DatagramException(e.getMessage(), e.getCause());
-		}
-		return toString();
-	}
-
+	/**
+	 * rsa公钥加密返回字符串
+	 * 
+	 * @param publicKey
+	 * @return
+	 */
 	public String encryptRSAString(String publicKey) {
 		try {
 			String data = BeanUtil.bean2JSON(this.getBody());
@@ -138,14 +130,18 @@ public abstract class AbstractDatagram {
 		return toString();
 	}
 
-	public String decryptDESString(String key) {
+	/**
+	 * rsa私钥解密后返回字符串
+	 * 
+	 * @param privateKey
+	 * @return
+	 */
+	public String decryptRSAString(String privateKey) {
 		try {
+			String signatute = this.getSignature();
 			String data = (String) this.getBody();
-			String signature = DigestUtils.md5Hex(data + key);
-			if (!this.getSignature().equalsIgnoreCase(signature)) {// MD5验证忽略大小写
-				throw new IllegalArgumentException("signature error!");
-			}
-			this.setBody(BeanUtil.json2Bean(Des3Util.decode(data, key), Map.class));
+			byte[] aesKeyByte = AesRsaUtil.decryptKey(privateKey, signatute, "UTF-8");
+			this.setBody(BeanUtil.json2Bean(AesRsaUtil.decryptData(data, aesKeyByte, "UTF-8"), Map.class));
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new DatagramException(e.getMessage(), e.getCause());
@@ -153,12 +149,42 @@ public abstract class AbstractDatagram {
 		return toString();
 	}
 
-	public String decryptRSAString(String privateKey) {
+	/**
+	 * 使用指定密钥3des加密后返回字符串
+	 * 
+	 * @param secretKey
+	 * @param signKey
+	 * @return
+	 */
+	public String encryptDesdedString(String secretKey, String signKey) {
 		try {
-			String signatute = this.getSignature();
+			String data = BeanUtil.bean2JSON(this.getBody());
+			String encodeData = Des3Util.encode(data, secretKey);
+			this.setBody(encodeData);
+			String signature = DigestUtils.md5Hex(encodeData + signKey);
+			this.setSignature(signature);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new DatagramException(e.getMessage(), e.getCause());
+		}
+		return toString();
+	}
+
+	/**
+	 * 使用指定密钥3des解密后返回字符串
+	 * 
+	 * @param encryptKey
+	 * @param signKey
+	 * @return
+	 */
+	public String decryptDesdedString(String encryptKey, String signKey) {
+		try {
 			String data = (String) this.getBody();
-			byte[] aesKeyByte = AesRsaUtil.decryptKey(privateKey, signatute, "UTF-8");
-			this.setBody(BeanUtil.json2Bean(AesRsaUtil.decryptData(data, aesKeyByte, "UTF-8"), Map.class));
+			String signature = DigestUtils.md5Hex(data + signKey);
+			if (!this.getSignature().equalsIgnoreCase(signature)) {// MD5验证忽略大小写
+				throw new IllegalArgumentException("signature error!");
+			}
+			this.setBody(BeanUtil.json2Bean(Des3Util.decode(data, encryptKey), Map.class));
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new DatagramException(e.getMessage(), e.getCause());
