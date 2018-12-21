@@ -27,7 +27,7 @@ import com.asciily.foundation.datagram.exception.DatagramException;
  */
 public abstract class AbstractDatagram {
 
-	private String nonceString;
+	private String nonce;
 
 	private String version;
 
@@ -37,12 +37,12 @@ public abstract class AbstractDatagram {
 
 	private String signature;
 
-	public String getNonceString() {
-		return nonceString;
+	public String getNonce() {
+		return nonce;
 	}
 
-	public void setNonceString(String nonceString) {
-		this.nonceString = nonceString;
+	public void setNonce(String nonce) {
+		this.nonce = nonce;
 	}
 
 	/**

@@ -79,7 +79,7 @@ public class ResponseDatagram extends AbstractDatagram {
 	public ResponseDatagram decryptRSA(String encryptString, String privateKey) throws DatagramException {
 		try {
 			ResponseDatagram rsd = BeanUtil.json2Bean(encryptString, this.getClass());
-			this.setNonceString(rsd.getNonceString());
+			this.setNonce(rsd.getNonce());
 			this.setTimestamp(rsd.getTimestamp());
 			this.setCode(rsd.getCode());
 			this.setMsg(rsd.getMsg());
@@ -106,7 +106,7 @@ public class ResponseDatagram extends AbstractDatagram {
 	public ResponseDatagram decryptDES(String encryptString, String key) throws DatagramException {
 		try {
 			ResponseDatagram rsd = BeanUtil.json2Bean(encryptString, this.getClass());
-			this.setNonceString(rsd.getNonceString());
+			this.setNonce(rsd.getNonce());
 			this.setTimestamp(rsd.getTimestamp());
 			this.setCode(rsd.getCode());
 			this.setMsg(rsd.getMsg());

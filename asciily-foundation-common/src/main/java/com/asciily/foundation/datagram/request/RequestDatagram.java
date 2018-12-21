@@ -47,7 +47,7 @@ public class RequestDatagram extends AbstractDatagram {
 
 	private RequestDatagram initDatagram() {
 		this.setVersion("1.0");
-		this.setNonceString(PKUtil.getInstance().generateNonceStr());
+		this.setNonce(PKUtil.getInstance().generateNonceStr());
 		this.setTimestamp(DateUtil.DateToString(Calendar.getInstance().getTime(), "yyyyMMddHHmmssSSS"));
 		return this;
 	}
@@ -55,7 +55,7 @@ public class RequestDatagram extends AbstractDatagram {
 	public RequestDatagram decryptRSA(String encryptString, String privateKey) throws DatagramException {
 		try {
 			RequestDatagram rd = BeanUtil.json2Bean(encryptString, this.getClass());
-			this.setNonceString(rd.getNonceString());
+			this.setNonce(rd.getNonce());
 			this.setVersion(rd.getVersion());
 			this.setTimestamp(rd.getTimestamp());
 			byte[] aesKeyByte = AesRsaUtil.decryptKey(privateKey, rd.getSignature(), "UTF-8");
@@ -80,7 +80,7 @@ public class RequestDatagram extends AbstractDatagram {
 	public RequestDatagram decryptDES(String encryptString, String key) throws DatagramException {
 		try {
 			RequestDatagram rd = BeanUtil.json2Bean(encryptString, this.getClass());
-			this.setNonceString(rd.getNonceString());
+			this.setNonce(rd.getNonce());
 			this.setVersion(rd.getVersion());
 			this.setTimestamp(rd.getTimestamp());
 			String signature = DigestUtils.md5Hex(rd.getBody() + key);
