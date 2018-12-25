@@ -52,4 +52,13 @@ public class StringUtil extends org.apache.commons.lang3.StringUtils {
 		}
 	}
 
+	public static boolean isEmptyOrNull(Object obj) {
+		if (null == obj)
+			return true;
+		if ("null".equalsIgnoreCase(String.valueOf(obj)))
+			return true;
+		if ("".equalsIgnoreCase(String.valueOf(obj)))
+			return true;
+		return false;
+	}
 }
