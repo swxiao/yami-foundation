@@ -36,6 +36,7 @@ public class ControllerCrossDomainAdvice extends AbstractMappingJacksonResponseB
 		response.getHeaders().set("Access-Control-Allow-Headers",
 				"Origin,No-Cache,X-Requested-with,If-Modified-Since,Last-Modified,Cache-Control,Expires,Content-Type");
 		response.getHeaders().set("Access-Control-Allow-Origin", "*");
+		response.getHeaders().set("Access-Control-Allow-Credentials", "true");
 		response.getHeaders().set("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE");
 		response.getHeaders().set("Access-Control-Max-Age", "1512000");
 	}

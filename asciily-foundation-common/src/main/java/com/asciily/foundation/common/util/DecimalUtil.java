@@ -60,11 +60,11 @@ public class DecimalUtil {
 	 * @param scale
 	 * @return
 	 */
-	public static int fen2Yuan(BigDecimal value, int scale) {
+	public static double fen2Yuan(BigDecimal value, int scale) {
 		if (value == null) {
-			return BigDecimal.ZERO.setScale(scale).intValue();
+			return BigDecimal.ZERO.setScale(scale).doubleValue();
 		} else {
-			return value.divide(BigDecimal.valueOf(100)).setScale(scale, BigDecimal.ROUND_HALF_UP).intValue();
+			return value.divide(BigDecimal.valueOf(100)).setScale(scale, BigDecimal.ROUND_HALF_UP).doubleValue();
 		}
 	}
 }
